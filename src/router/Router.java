@@ -5,7 +5,7 @@ import java.util.HashSet;
 public class Router extends Thread {
 
 	private int port;
-	private HashSet rountingTable;
+	private HashSet<RoutingNode> rountingTable;
 
 	
 	/**
@@ -20,7 +20,7 @@ public class Router extends Thread {
 	@Override
 	public void run() {
 		// TODO hier der Routingalgorythmus
-		super.run();
+		
 	}
 
 
