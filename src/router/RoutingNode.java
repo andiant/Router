@@ -2,34 +2,34 @@ package router;
 
 public class RoutingNode {
 
-	private String fromAdress;
-	private String toAdress;
-	private int toPort;
+	private String targetNetwork;
+	private String targetAdress;
+	private int targetPort;
 
-	public RoutingNode(String fromAdress, String toAdress, int toPort) {
+	public RoutingNode(String targetNetwork, String targetAdress, int targetPort) {
 		super();
-		this.fromAdress = fromAdress;
-		this.toAdress = toAdress;
-		this.toPort = toPort;
+		this.targetNetwork = targetNetwork;
+		this.targetAdress = targetAdress;
+		this.targetPort = targetPort;
 	}
 
-	public String getFromAdress() {
-		return fromAdress;
+	public String getTargetNetwork() {
+		return targetNetwork;
 	}
 
-	public String getToAdress() {
-		return toAdress;
+	public String getTargetAdress() {
+		return targetAdress;
 	}
 
-	public int getToPort() {
-		return toPort;
+	public int getTargetPort() {
+		return targetPort;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fromAdress == null) ? 0 : fromAdress.hashCode());
+		result = prime * result + ((targetNetwork == null) ? 0 : targetNetwork.hashCode());
 		return result;
 	}
 
@@ -45,10 +45,10 @@ public class RoutingNode {
 			return false;
 		}
 		RoutingNode other = (RoutingNode) obj;
-		if (fromAdress == null) {
-			if (other.fromAdress != null)
+		if (targetNetwork == null) {
+			if (other.targetNetwork != null)
 				return false;
-		} else if (!fromAdress.equals(other.fromAdress))
+		} else if (!targetNetwork.equals(other.targetNetwork))
 			return false;
 		return true;
 	}

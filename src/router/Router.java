@@ -1,6 +1,11 @@
 package router;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.HashSet;
+
+import givenClasses.IpPacket;
+import givenClasses.NetworkLayer;
 
 public class Router extends Thread {
 
@@ -12,15 +17,56 @@ public class Router extends Thread {
 	 * @param port
 	 * @param rountingTable
 	 */
-	public Router(int port, HashSet rountingTable) {
+	public Router(int port, HashSet<RoutingNode> rountingTable) {
 		this.port = port;
 		this.rountingTable = rountingTable;
 	}
 	
 	@Override
 	public void run() {
-		// TODO hier der Routingalgorythmus
+		try {
+			// TODO hier der Routingalgorythmus
+			NetworkLayer nl;
+			nl = new NetworkLayer(port);
+			
+			IpPacket ipPacket;
+			while (!this.isInterrupted()) {
+				ipPacket = nl.getPacket();
+				
+				// Hop-Limit verringern und prüfen
+				ipPacket.setHopLimit(ipPacket.getHopLimit() - 1);
+				
+				if (ipPacket.getHopLimit() <= 0) {
+					// ControllPacket senden und Packet verwerfen
+					// TODO Time Exceeded = 11
+					
+				} else {
+					// nächstes Ziel gemäß Longest-Prefix-Match bestimmen
+					String nextTarget = getNextTarget();
+					if (nextTarget == null) {
+						// ControllPacket senden und Packet verwerfen
+						// TODO Destination Unreachable = 3
+						
+					} else {
+						// Packet an nächsten Hop weiterleiten
+						
+					}
+				}
+				
+			}
+		} catch (SocketException e) {
+			System.out.println("Fehler bei initialisierung von networkLayer");
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			
+		}
 		
+		
+	}
+	
+	private String getNextTarget() {
+		// TODO
+		return null;
 	}
 
 
