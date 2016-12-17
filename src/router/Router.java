@@ -8,81 +8,58 @@ import givenClasses.IpPacket;
 import givenClasses.NetworkLayer;
 
 public class Router extends Thread {
-
-	private int port;
-	private HashSet<RoutingNode> rountingTable;
-
+	
+	public HashSet<RoutingNode> routingTable;
+	public NetworkLayer networkLayer;
 	
 	/**
 	 * @param port
 	 * @param rountingTable
 	 */
-	public Router(int port, HashSet<RoutingNode> rountingTable) {
-		this.port = port;
-		this.rountingTable = rountingTable;
-	}
-	
-	@Override
-	public void run() {
+	private Router(int port, HashSet<RoutingNode> rountingTable) {
+		this.routingTable = rountingTable;
 		try {
-			// TODO hier der Routingalgorythmus
-			NetworkLayer nl;
-			nl = new NetworkLayer(port);
-			
-			IpPacket ipPacket;
-			while (!this.isInterrupted()) {
-				ipPacket = nl.getPacket();
-				
-				// Hop-Limit verringern und prüfen
-				ipPacket.setHopLimit(ipPacket.getHopLimit() - 1);
-				
-				if (ipPacket.getHopLimit() <= 0) {
-					// ControllPacket senden und Packet verwerfen
-					// TODO Time Exceeded = 11
-					
-				} else {
-					// nächstes Ziel gemäß Longest-Prefix-Match bestimmen
-					String nextTarget = getNextTarget();
-					if (nextTarget == null) {
-						// ControllPacket senden und Packet verwerfen
-						// TODO Destination Unreachable = 3
-						
-					} else {
-						// Packet an nächsten Hop weiterleiten
-						
-					}
-				}
-				
-			}
+			networkLayer = new NetworkLayer(port);
 		} catch (SocketException e) {
 			System.out.println("Fehler bei initialisierung von networkLayer");
 			System.out.println(e.getMessage());
-		} catch (IOException e) {
-			
 		}
-		
-		
 	}
-	
-	private String getNextTarget() {
-		// TODO
-		return null;
+
+	@Override
+	public void run() {
+		IpPacket ipPacket;
+		while (!this.isInterrupted()) {
+			try {
+				// Auf eingehende Packet warten
+				ipPacket = networkLayer.getPacket();
+				if (ipPacket != null) {
+					// Wenn Packet eingegangen, dann routingThread für dieses Packet starten
+					Thread routingThread = new Thread(new RoutingProcedure(ipPacket,routingTable,networkLayer));
+					routingThread.start();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				this.interrupt();
+			}
+
+		}
 	}
 
 
 	/************ STATIC ****************************/
 	/**
-	 * Liest die Konfigurations-Datei und füllt die 
-	 * Routing-Tabelle mit entsprechenden RoutingNode's 
+	 * Liest die Konfigurations-Datei und füllt die Routing-Tabelle mit
+	 * entsprechenden RoutingNode's
 	 *
 	 * @return HashSet containing RoutingNode's
 	 */
 	private static HashSet<RoutingNode> readConfigFile(String configFilePath) {
 		HashSet<RoutingNode> routingTable;
 		routingTable = new HashSet<RoutingNode>();
-		
+
 		// TODO Routing-Tabelle aus Config-Datei füllen
-		
+
 		return routingTable;
 	}
 
@@ -98,7 +75,7 @@ public class Router extends Thread {
 			Router router = new Router(port, readConfigFile(configFilePath));
 			router.start();
 			router.join();
-			
+
 		} catch (NumberFormatException e) {
 			System.out.println("The port has to be numeric");
 			errorMessage(e);
@@ -109,9 +86,9 @@ public class Router extends Thread {
 			System.out.println("wrong arguments");
 			errorMessage(e);
 		}
-		
+
 	}
-	
+
 	private static void errorMessage(Exception e) {
 		System.out.println("\nrouter [PORT] [PATH_TO_CONFIG_FILE]\n");
 		System.out.println(e.getMessage());

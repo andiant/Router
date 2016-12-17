@@ -1,12 +1,14 @@
 package router;
 
+import java.net.Inet6Address;
+
 public class RoutingNode {
 
 	private String targetNetwork;
-	private String targetAdress;
+	private Inet6Address targetAdress;
 	private int targetPort;
 
-	public RoutingNode(String targetNetwork, String targetAdress, int targetPort) {
+	public RoutingNode(String targetNetwork, Inet6Address targetAdress, int targetPort) {
 		super();
 		this.targetNetwork = targetNetwork;
 		this.targetAdress = targetAdress;
@@ -17,7 +19,7 @@ public class RoutingNode {
 		return targetNetwork;
 	}
 
-	public String getTargetAdress() {
+	public Inet6Address getTargetAdress() {
 		return targetAdress;
 	}
 
