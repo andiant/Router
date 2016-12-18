@@ -8,16 +8,20 @@ import givenClasses.IpPacket;
 import givenClasses.NetworkLayer;
 
 public class Router extends Thread {
-	
-	public HashSet<RoutingNode> routingTable;
+
 	public NetworkLayer networkLayer;
-	
+	private RoutingTable routingTable;
+
 	/**
 	 * @param port
 	 * @param rountingTable
 	 */
-	private Router(int port, HashSet<RoutingNode> rountingTable) {
-		this.routingTable = rountingTable;
+	private Router(int port, String configFilePath) {
+		try {
+			this.routingTable = new RoutingTable(configFilePath);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		try {
 			networkLayer = new NetworkLayer(port);
 		} catch (SocketException e) {
@@ -34,8 +38,9 @@ public class Router extends Thread {
 				// Auf eingehende Packet warten
 				ipPacket = networkLayer.getPacket();
 				if (ipPacket != null) {
-					// Wenn Packet eingegangen, dann routingThread für dieses Packet starten
-					Thread routingThread = new Thread(new RoutingProcedure(ipPacket,routingTable,networkLayer));
+					// Wenn Packet eingegangen, dann routingThread für dieses
+					// Packet starten
+					Thread routingThread = new Thread(new RoutingProcedure(ipPacket, routingTable, networkLayer));
 					routingThread.start();
 				}
 			} catch (IOException e) {
@@ -47,24 +52,9 @@ public class Router extends Thread {
 	}
 
 
-	/************ STATIC ****************************/
 	/**
-	 * Liest die Konfigurations-Datei und füllt die Routing-Tabelle mit
-	 * entsprechenden RoutingNode's
-	 *
-	 * @return HashSet containing RoutingNode's
-	 */
-	private static HashSet<RoutingNode> readConfigFile(String configFilePath) {
-		HashSet<RoutingNode> routingTable;
-		routingTable = new HashSet<RoutingNode>();
-
-		// TODO Routing-Tabelle aus Config-Datei füllen
-
-		return routingTable;
-	}
-
-	/**
-	 * @param [UDP-listening-port] [configfile-path]
+	 * @param [UDP-listening-port]
+	 *            [configfile-path]
 	 */
 	public static void main(String... args) {
 		try {
@@ -72,7 +62,7 @@ public class Router extends Thread {
 			int port = Integer.parseInt(args[0]);
 			String configFilePath = args[1];
 
-			Router router = new Router(port, readConfigFile(configFilePath));
+			Router router = new Router(port, configFilePath);
 			router.start();
 			router.join();
 

@@ -4,22 +4,22 @@ import java.net.Inet6Address;
 
 public class RoutingNode {
 
-	private String targetNetwork;
-	private Inet6Address targetAdress;
+	private byte[] targetNetwork;
+	private byte[] targetAdress;
 	private int targetPort;
 
-	public RoutingNode(String targetNetwork, Inet6Address targetAdress, int targetPort) {
+	public RoutingNode(byte[] targetNetwork, byte[] targetAdress, int targetPort) {
 		super();
 		this.targetNetwork = targetNetwork;
 		this.targetAdress = targetAdress;
 		this.targetPort = targetPort;
 	}
 
-	public String getTargetNetwork() {
+	public byte[] getTargetNetwork() {
 		return targetNetwork;
 	}
 
-	public Inet6Address getTargetAdress() {
+	public byte[] getTargetAdress() {
 		return targetAdress;
 	}
 
