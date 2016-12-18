@@ -1,8 +1,10 @@
 package router;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.Inet6Address;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 
 import givenClasses.ControlPacket;
@@ -11,6 +13,7 @@ import givenClasses.NetworkLayer;
 
 public class RoutingProcedure implements Runnable {
 	
+	private final int HOP_LIMIT = 6;
 	private IpPacket ipPacket;
 	private RoutingTable routingTable;
 	private NetworkLayer networkLayer;
@@ -27,7 +30,12 @@ public class RoutingProcedure implements Runnable {
 		if (ipPacket.getType() == IpPacket.Header.Control) {
 			/* Falls emfpangenes Packet ein ControlPacket -> NextHop bestimmen und einfach weiterleiten*/
 			assignNextHop(ipPacket);
-			networkLayer.sendPacket(ipPacket);
+			try {
+				networkLayer.sendPacket(ipPacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			/* Falls empfangenes Packet ein DataPacket */
 
@@ -37,18 +45,46 @@ public class RoutingProcedure implements Runnable {
 				// ControllPacket senden mit Router IP und Packet verwerfen
 				// TODO Time Exceeded Nicht sicher ob es richtig ist
 				ControlPacket cPacket = new ControlPacket(ControlPacket.Type.TimeExceeded, extractIPHeaderFromIPPacket(ipPacket));
-				IpPacket newPacket = new IpPacket((Inet6Address) Inet6Address.getLocalHost(), ipPacket.getSourceAddress(), hopLimit, nextHopIp, nextHopPort);
-				
+				Inet6Address routerAdress;
+				try {
+					routerAdress = (Inet6Address) Inet6Address.getLocalHost();
+					IpPacket newPacket = new IpPacket(routerAdress, ipPacket.getSourceAddress(), HOP_LIMIT, ipPacket.getNextHopIp(), ipPacket.getNextHopPort());
+					newPacket.setControlPayload(cPacket.getBytes());
+					networkLayer.sendPacket(newPacket);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				// nächstes Ziel gemäß Longest-Prefix-Match bestimmen
 				assignNextHop(ipPacket);
 				if (ipPacket.getNextHopIp() == null) {
 					// ControllPacket senden und Packet verwerfen
 					// TODO Destination Unreachable
-					ControlPacket cPacket = new ControlPacket(ControlPacket.Type.DestinationUnreachable, payload);
+					try {
+						ControlPacket cPacket = new ControlPacket(ControlPacket.Type.DestinationUnreachable, extractIPHeaderFromIPPacket(ipPacket));
+						Inet6Address routerAdress = (Inet6Address) Inet6Address.getLocalHost();
+						IpPacket newPacket = new IpPacket(routerAdress, ipPacket.getSourceAddress(), HOP_LIMIT, ipPacket.getNextHopIp(), ipPacket.getNextHopPort());
+						newPacket.setControlPayload(cPacket.getBytes());
+						networkLayer.sendPacket(newPacket);
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else {
 					// Packet an nächsten Hop weiterleiten
-					networkLayer.sendPacket(ipPacket);
+					try {
+						networkLayer.sendPacket(ipPacket);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
