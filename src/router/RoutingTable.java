@@ -51,8 +51,8 @@ public class RoutingTable {
 				Hop hop = new Hop(byteAdressDest, port);
 				
 				forwarding.put(network, hop);
-				System.out.println("Read succesful!!! '"+configFilePath+"'");
 			}
+			System.out.println("Read succesful!!! '"+configFilePath+"'");
 		} catch (FileNotFoundException e) {
 			System.out.println("Could not find '"+configFilePath+"'");
 			e.printStackTrace();

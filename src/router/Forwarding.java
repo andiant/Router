@@ -39,8 +39,8 @@ public class Forwarding {
 				data.add(i, newNode);
 				return;
 			}
-			data.add(newNode);
 		}
+		data.add(newNode);
 	}
 
 	public Hop getNextHop(IpPacket packet) {
