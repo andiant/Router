@@ -4,49 +4,46 @@ import java.net.Inet6Address;
 
 public class RoutingNode {
 
-	private byte[] targetNetwork;
-	private byte[] targetAdress;
-	private int targetPort;
+	private Network targetNetwork;
+	private Hop targetHop;
 
-	public RoutingNode(byte[] targetNetwork, byte[] targetAdress, int targetPort) {
+	public RoutingNode(Network targetNetwork, Hop targetHop) {
 		super();
 		this.targetNetwork = targetNetwork;
-		this.targetAdress = targetAdress;
-		this.targetPort = targetPort;
+		this.targetHop = targetHop;
 	}
 
-	public byte[] getTargetNetwork() {
+	public Network getTargetNetwork() {
 		return targetNetwork;
 	}
 
-	public byte[] getTargetAdress() {
-		return targetAdress;
-	}
-
-	public int getTargetPort() {
-		return targetPort;
+	public Hop getTargetHop() {
+		return targetHop;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((targetHop == null) ? 0 : targetHop.hashCode());
 		result = prime * result + ((targetNetwork == null) ? 0 : targetNetwork.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		RoutingNode other = (RoutingNode) obj;
+		if (targetHop == null) {
+			if (other.targetHop != null)
+				return false;
+		} else if (!targetHop.equals(other.targetHop))
+			return false;
 		if (targetNetwork == null) {
 			if (other.targetNetwork != null)
 				return false;

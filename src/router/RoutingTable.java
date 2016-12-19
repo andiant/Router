@@ -23,10 +23,10 @@ import utils.Converter;
 public class RoutingTable {
 	
 	private final int ADRESS_LEN_BITS = 128;
-	private HashMap<Network, Hop> forwarding;
+	private Forwarding forwarding;
 	
 	public RoutingTable(String configFilePath) throws Exception{
-		this.forwarding = new HashMap<>();
+		this.forwarding = new Forwarding();
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(configFilePath));
 			String line;
@@ -67,37 +67,9 @@ public class RoutingTable {
 	 * @throws UnknownHostException 
 	 */
 	public void assignNextHop(IpPacket packet) throws UnknownHostException, Exception{
-		//Convert adress to binary
-		String srcBinary = Converter.convertByteArrayToBinaryString(packet.getDestinationAddress().getAddress());
-		int longestMatchingBits = 0;
-		Network longestMatchingNetwork = null;		// dummy Network so muss eine Schicht drüber geprüft werden ob die IP ungleich null ist
+		Hop nextHop = forwarding.getNextHop(packet);
 		
-		for(Network network : forwarding.keySet()){
-			try {
-				// prüfe ob das Netz in Frage kommt
-				String netBinary = Converter.convertHexAdressToBinaryString(network.getNetworkAdress());
-				if(match(srcBinary, netBinary, network.getBits())){
-					
-					// Prüfe wieviel Bits übereinstimmen
-					int i;
-					for(i = 0; i < ADRESS_LEN_BITS; i++){
-						if(srcBinary.charAt(i) != netBinary.charAt(i)){
-							break;
-						}
-					}
-					
-					if(i > longestMatchingBits){
-						longestMatchingBits = i;
-						longestMatchingNetwork = network;
-					}
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if(longestMatchingNetwork != null){
-			Hop nextHop = forwarding.get(longestMatchingNetwork);
+		if(nextHop != null){
 			byte[] nextHopAdress = nextHop.getAdress();
 			Inet6Address newHopIp = (Inet6Address) Inet6Address.getByAddress(nextHopAdress); 
 			packet.setNextHopIp(newHopIp);
@@ -106,18 +78,4 @@ public class RoutingTable {
 			packet.setNextHopIp(null);
 		}
 	}
-	
-	private boolean match(String srcBinary, String netBinary, int bits) {
-		if(srcBinary.startsWith(netBinary.substring(0, bits))){
-			return true;
-		}
-		return false;
-	}
-
-	public static void main(String[] args) throws Exception {
-		RoutingTable t = new RoutingTable("configtest.txt");
-	}
-	
-	
-
 }
