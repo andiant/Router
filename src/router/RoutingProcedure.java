@@ -80,6 +80,7 @@ public class RoutingProcedure implements Runnable {
 				} else {
 					// Packet an nächsten Hop weiterleiten
 					try {
+						System.out.println("Sending to IP: "+ipPacket.getNextHopIp()+":"+ipPacket.getNextHopPort());
 						networkLayer.sendPacket(ipPacket);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

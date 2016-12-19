@@ -38,6 +38,9 @@ public class Router extends Thread {
 				// Auf eingehende Packet warten
 				ipPacket = networkLayer.getPacket();
 				if (ipPacket != null) {
+					System.out.println("Received from HopIP: "+ipPacket.getNextHopIp());
+					System.out.println("Source IP: "+ipPacket.getSourceAddress());
+					
 					// Wenn Packet eingegangen, dann routingThread für dieses
 					// Packet starten
 					Thread routingThread = new Thread(new RoutingProcedure(ipPacket, routingTable, networkLayer));
