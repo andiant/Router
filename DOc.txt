@@ -1,6 +1,6 @@
 Aufruf Client:
 Client <Type> <Data> <ServerIP> <localPort> <NextHopIp> <NextHopPort> <hoplimit>
-
+java givenClasses/Server Data HalloWelt! fe80:0000:0000:0000:9ead:97ff:fe22:5619 8085 fe80:0000:0000:0000:0014:b613:39da:77fc 8081 10
 
 
 

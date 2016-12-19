@@ -53,6 +53,7 @@ public class NetworkLayer {
      */
     public void sendPacket(IpPacket ipPacket) throws IOException {
         byte[] data = ipPacket.getBytes();
+        System.out.println("[NetworkLayer] Sending to :"+ipPacket.getNextHopIp());
         DatagramPacket packet = new DatagramPacket(data, data.length, ipPacket.getNextHopIp(), ipPacket.getNextHopPort());
         socket.send(packet);
     }

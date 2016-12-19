@@ -27,6 +27,8 @@ public class RoutingProcedure implements Runnable {
 	@Override
 	public void run() {
 		/* Routing-Algorithmus */
+		Inet6Address tmpNextHop = ipPacket.getNextHopIp();
+		int tmpPort = ipPacket.getNextHopPort();
 		if (ipPacket.getType() == IpPacket.Header.Control) {
 			/* Falls emfpangenes Packet ein ControlPacket -> NextHop bestimmen und einfach weiterleiten*/
 			assignNextHop(ipPacket);
@@ -48,7 +50,7 @@ public class RoutingProcedure implements Runnable {
 				Inet6Address routerAdress;
 				try {
 					routerAdress = (Inet6Address) Inet6Address.getLocalHost();
-					IpPacket newPacket = new IpPacket(routerAdress, ipPacket.getSourceAddress(), HOP_LIMIT, ipPacket.getNextHopIp(), ipPacket.getNextHopPort());
+					IpPacket newPacket = new IpPacket(routerAdress, ipPacket.getSourceAddress(), HOP_LIMIT, tmpNextHop, tmpPort);
 					newPacket.setControlPayload(cPacket.getBytes());
 					networkLayer.sendPacket(newPacket);
 				} catch (UnknownHostException e) {
