@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import givenClasses.IpPacket;
+
 public class Converter {
 
 	private final static int IPv6_HEX_BYTES = 8;
@@ -104,9 +106,4 @@ public class Converter {
 		}
 		return binary;
 	}
-
-	
-	
-
-	
 }
