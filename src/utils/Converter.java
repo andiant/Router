@@ -108,10 +108,5 @@ public class Converter {
 		}
 		return binary;
 	}
-	
-	public static void main(String[] args) throws UnknownHostException {
-		System.getProperties().setProperty("java.net.preferIPv6Addresses", "true");
-		Inet6Address a = (Inet6Address) Inet6Address.getLocalHost();
-		System.out.println(a.getHostAddress());
-	}
+
 }
