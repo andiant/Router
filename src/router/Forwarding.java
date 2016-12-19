@@ -46,8 +46,6 @@ public class Forwarding {
 	public Hop getNextHop(IpPacket packet) {
 		// Convert adress to binary
 		String srcBinary = Converter.convertByteArrayToBinaryString(packet.getDestinationAddress().getAddress());
-		int longestMatchingBits = 0;
-		Network longestMatchingNetwork = null;
 		try{
 			for(RoutingNode node : data){
 				String netBinary = Converter.convertHexAdressToBinaryString(node.getTargetNetwork().getNetworkAdress());
