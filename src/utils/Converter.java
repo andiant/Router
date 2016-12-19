@@ -1,9 +1,11 @@
 package utils;
 
 import java.io.IOException;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import givenClasses.IpPacket;
 
@@ -105,5 +107,11 @@ public class Converter {
 			binary += FirstBinAddr + SecondBinAddr;
 		}
 		return binary;
+	}
+	
+	public static void main(String[] args) throws UnknownHostException {
+		System.getProperties().setProperty("java.net.preferIPv6Addresses", "true");
+		Inet6Address a = (Inet6Address) Inet6Address.getLocalHost();
+		System.out.println(a.getHostAddress());
 	}
 }
