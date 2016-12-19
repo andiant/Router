@@ -57,6 +57,8 @@ public class Router extends Thread {
 	 *            [configfile-path]
 	 */
 	public static void main(String... args) {
+		
+		System.getProperties().setProperty("java.net.preferIPv6Addresses", "true");
 		try {
 
 			int port = Integer.parseInt(args[0]);

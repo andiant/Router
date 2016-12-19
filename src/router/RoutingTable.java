@@ -27,8 +27,8 @@ public class RoutingTable {
 	
 	public RoutingTable(String configFilePath) throws Exception{
 		this.forwarding = new Forwarding();
+		BufferedReader in = new BufferedReader(new FileReader(configFilePath));
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(configFilePath));
 			String line;
 			while((line = in.readLine()) != null){
 				String[] arr = line.split(";");
@@ -51,12 +51,15 @@ public class RoutingTable {
 				Hop hop = new Hop(byteAdressDest, port);
 				
 				forwarding.put(network, hop);
+				System.out.println("Read succesful!!! '"+configFilePath+"'");
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("Could not find '"+configFilePath+"'");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			in.close();
 		}
 	}
 	

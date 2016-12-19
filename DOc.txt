@@ -1,0 +1,15 @@
+Aufruf Client:
+Client <Type> <Data> <ServerIP> <localPort> <NextHopIp> <NextHopPort> <hoplimit>
+
+
+
+
+Aufruf Router;
+Router <Port> <ConfigFilePath>
+
+
+
+
+
+Aufruf Server:
+Server <Port>
