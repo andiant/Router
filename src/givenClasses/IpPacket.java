@@ -75,7 +75,7 @@ public class IpPacket {
      */
     public IpPacket(Inet6Address destination, int hopLimit, Inet6Address nextHopIp, int nextHopPort) throws UnknownHostException {
         this((Inet6Address) Inet6Address.getByName("::1"), destination, hopLimit, nextHopIp, nextHopPort);
-        source = (Inet6Address) Inet6Address.getLocalHost();
+//        source = (Inet6Address) Inet6Address.getLocalHost();
     }
 
     /**

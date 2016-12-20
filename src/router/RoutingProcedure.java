@@ -40,7 +40,7 @@ public class RoutingProcedure implements Runnable {
 					extractIPHeaderFromIPPacket(ipPacket));
 			Inet6Address routerAdress;
 			try {
-				routerAdress = (Inet6Address) Inet6Address.getLocalHost();
+				routerAdress = (Inet6Address) Inet6Address.getByName("::2");
 				IpPacket newPacket = new IpPacket(routerAdress, ipPacket.getSourceAddress(), HOP_LIMIT, tmpNextHop,
 						tmpPort);
 				newPacket.setControlPayload(cPacket.getBytes());
@@ -58,9 +58,9 @@ public class RoutingProcedure implements Runnable {
 				try {
 					ControlPacket cPacket = new ControlPacket(ControlPacket.Type.DestinationUnreachable,
 							extractIPHeaderFromIPPacket(ipPacket));
-					Inet6Address routerAdress = (Inet6Address) Inet6Address.getLocalHost();
+					Inet6Address routerAdress = (Inet6Address) Inet6Address.getByName("::2");
 					IpPacket newPacket = new IpPacket(routerAdress, ipPacket.getSourceAddress(), HOP_LIMIT,
-							ipPacket.getNextHopIp(), ipPacket.getNextHopPort());
+							tmpNextHop, tmpPort);
 					newPacket.setControlPayload(cPacket.getBytes());
 					networkLayer.sendPacket(newPacket);
 				} catch (UnknownHostException e) {

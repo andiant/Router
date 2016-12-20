@@ -15,8 +15,8 @@ import givenClasses.IpPacket;
 import utils.Converter;
 
 /**
- * Die Adressen müssen in Hex dargestellt werden und es dürfen keine Verkürzungsformen benutzt werden
- * z.B. 2001:db8::/48 nicht erlaubt wegen "::" und "db8", richtig wäre die Nullen zu füllen und "db08" zu schreiben!
+ * Die Adressen mï¿½ssen in Hex dargestellt werden und es dï¿½rfen keine Verkï¿½rzungsformen benutzt werden
+ * z.B. 2001:db8::/48 nicht erlaubt wegen "::" und "db8", richtig wï¿½re die Nullen zu fï¿½llen und "db08" zu schreiben!
  * @author Assiel
  *
  */
@@ -32,7 +32,8 @@ public class RoutingTable {
 			String line;
 			while((line = in.readLine()) != null){
 				String[] arr = line.split(";");
-				
+				System.out.println(line);
+				System.out.println(arr.length);
 				if(arr.length != 3){
 					throw new Exception("ConfigFile Syntax Error!");
 				}
@@ -45,7 +46,7 @@ public class RoutingTable {
 				int bits = Integer.parseInt(netAdress[1]);
 				Network network  = new Network(netAdress[0], bits);
 				
-				// arr[1], arr[2] Adresse an die gesendet werden soll und zugehöriger port
+				// arr[1], arr[2] Adresse an die gesendet werden soll und zugehï¿½riger port
 				byte[] byteAdressDest = Converter.stringHexToByteArray(arr[1]);
 				int port = Integer.parseInt(arr[2]);
 				Hop hop = new Hop(byteAdressDest, port);
