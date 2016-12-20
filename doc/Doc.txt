@@ -1,0 +1,28 @@
+##### Aufrufe #####
+
+Aufruf Client:
+Client <Type> <Data> <ServerIP> <localPort> <NextHopIp> <NextHopPort> <hoplimit>
+java givenClasses/Client Data HalloWelt! fe80:0000:0000:0000:8053:1c3b:cceb:c03f 8085 fe80:0000:0000:0000:0014:b613:39da:77fc 8081 10
+
+
+
+Aufruf Router;
+Router <Port> <ConfigFilePath>
+
+
+
+Aufruf Server:
+Server <Port>
+
+
+
+##### Datenstruktur #####
+
+RoutingTable:
+Sortierte Liste von RoutingNodes. RoutingNodes enthalten ein Netz und eine Ip+Port auf den weitergeleitet wird. Die Liste ist absteigender nach Länge des Präfix sortiert, sodass das erste Netz auch nach "Longest Präfix Match" stimmt.
+
+##### Routertabelle Konfiguration #####
+
+Eine Datei für jeden Router wird erstellt und in jeder Zeile muss folgendes stehen:
+
+<Netzadresse>/<Präfixlänge>;<Ziel-Ip>;<ZielPort>
